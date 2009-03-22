@@ -14,3 +14,10 @@ get '/' do
   redirect(url)
 end
 
+get '/stats' do
+  @downloads = {}
+  Dir["counters/*.txt"].each do |counter|
+    @downloads[counter.split("/")[1]] = File.read(counter).strip.to_i
+  end
+  erb :stats
+end
