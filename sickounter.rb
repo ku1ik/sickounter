@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 
-COUNTERS_DIR = ARGV[0] || File.join(File.dirname(__FILE__), 'counters')
+COUNTERS_DIR = ENV['COUNTERS_DIR'] || File.join(File.dirname(__FILE__), 'counters')
 
 get '/' do
   url = params[:f] or raise Sinatra::NotFound
