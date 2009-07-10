@@ -3,6 +3,8 @@ require 'sinatra'
 
 COUNTERS_DIR = ENV['COUNTERS_DIR'] || File.join(File.dirname(__FILE__), 'counters')
 
+use_in_file_templates!
+
 get '/' do
   url = params[:f] or raise Sinatra::NotFound
   filename = url.gsub(/https?:\/\//, "").gsub(/[^a-zA-Z0-9_-]/, ".") + ".txt"
