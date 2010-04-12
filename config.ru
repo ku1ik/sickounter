@@ -1,6 +1,5 @@
 require 'rubygems'
-require 'sinatra'
-require 'sickounter.rb'
+require 'sickounter'
 
 run Sinatra::Application
 
