@@ -1,18 +1,28 @@
-require 'sinatra'
-
-COUNTERS_DIR = ENV['COUNTERS_DIR'] || File.join(File.dirname(__FILE__), 'counters')
+require "sinatra"
+require "uri"
+require_relative "models"
 
 get '/' do
-  url = params[:f] or raise Sinatra::NotFound
-  filename = url.gsub(/https?:\/\//, "").gsub(/[^a-zA-Z0-9_-]/, ".") + ".txt"
-  path = File.join(COUNTERS_DIR, filename)
-  val = (File.read(path).strip.to_i rescue 0) + 1
-  File.open(path, "w") do |f|
-    f.flock(File::LOCK_EX)
-    f.puts(val.to_s)
-    f.flock(File::LOCK_UN)
+  f = params[:f] or raise Sinatra::NotFound
+
+  target_url = URI.parse(f)
+  referer_url = URI.parse(request.referer)
+
+  if host = target_url.host || referer_url.host
+    domain = Domain.find_or_create_by(:name => host)
+
+    if target_url.path[0] == "/"
+      path = target_url.path
+    else
+      path = File.dirname(referer_url.path + " ") + "/" + target_url.path
+    end
+
+    download = domain.downloads.find_or_create_by(:path => path)
+    download.count += 1
+    download.save
   end
-  redirect(url)
+
+  redirect(f)
 end
 
 get '/stats' do
