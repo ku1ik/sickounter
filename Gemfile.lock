@@ -22,7 +22,7 @@ GEM
       rack (~> 1.1)
       tilt (~> 1.2)
     tilt (1.2.1)
-    tzinfo (0.3.24)
+    tzinfo (0.3.61)
     will_paginate (3.0.pre2)
 
 PLATFORMS
